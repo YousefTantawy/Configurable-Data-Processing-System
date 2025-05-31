@@ -7,8 +7,6 @@ using namespace std;
 
 int main(void) 
 {
-    string fileName, choice;
-    TextProcessor text;
 
     return 0;
 }
