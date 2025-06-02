@@ -3,15 +3,24 @@
 
 std::unique_ptr<Processor> ProcessorFactory::createProcessor(const std::string& type) 
 {
-    if (type == "Text") {
+    if (type == "Text" || type == "text") 
+    {
         return std::make_unique<TextProcessor>();
-    } else if (type == "Numeric") {
+    } 
+    else if (type == "Numeric" || type == "numeric") 
+    {
         return std::make_unique<NumericProcessor>();
-    } else if (type == "Image") {
+    } 
+    else if (type == "Image" || type == "image") 
+    {
         return std::make_unique<ImageProcessor>();
-    } else if (type == "Audio") {
+    } 
+    else if (type == "Audio" || type == "audio") 
+    {
         return std::make_unique<AudioProcessor>();
-    } else {
+    } 
+    else 
+    {
         throw std::invalid_argument("Unsupported processor type: " + type);
     }
 }
