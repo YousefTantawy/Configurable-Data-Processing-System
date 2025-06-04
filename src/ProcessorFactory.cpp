@@ -11,10 +11,10 @@ std::unique_ptr<Processor> ProcessorFactory::createProcessor(const std::string& 
     // {
     //     return std::make_unique<NumericProcessor>();
     // } 
-    // else if (type == "Image" || type == "image") 
-    // {
-    //     return std::make_unique<ImageProcessor>();
-    // } 
+    else if (type == "Image" || type == "image") 
+    {
+        return std::make_unique<ImageProcessor>();
+    } 
     // else if (type == "Audio" || type == "audio") 
     // {
     //     return std::make_unique<AudioProcessor>();

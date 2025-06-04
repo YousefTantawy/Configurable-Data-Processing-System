@@ -4,11 +4,13 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <opencv2/opencv.hpp>
+using namespace cv;
 
 class Processor {
 protected:
-    std::fstream file;  // shared by all processors
-
+    std::fstream file;  // shared by 2 processors
+    std::string filePath; // shared by all processors
 public:
     virtual void loadFile(const std::string& filepath) = 0; // new virtual interface
     virtual void printData() = 0; // pure virtual function
@@ -19,7 +21,7 @@ public:
 class TextProcessor : public Processor 
 {
 protected:
-    std::string filePath;
+    
 public:
     void loadFile(const std::string& filepath) override;
     void printData() override;
@@ -30,14 +32,16 @@ public:
     int searchWord(std::string& searchWord);
 };
 
-// class ImageProcessor : public Processor {
-// public:
-//     void loadFile(const std::string& filepath) override;
-//     void printData() override;
+class ImageProcessor : public Processor {
+protected:
+    Mat image;
+public:
+    void loadFile(const std::string& filepath) override;
+    void printData() override;
 
-//     void loadPixelData(const std::string& filepath);  // could be wrapped by loadFile
-//     void applyThreshold(float threshold);
-// };
+    void applyThreshold(float threshold);
+    void saveEdits();
+};
 
 // class AudioProcessor : public Processor {
 // public:
@@ -48,14 +52,18 @@ public:
 //     void filterNoise();
 // };
 
-// class NumericProcessor : public Processor 
-// {
+// class NumericProcessor : public Processor {
+// protected:
+//     std::vector<double> numbers;
+
 // public:
 //     void loadFile(const std::string& filepath) override;
 //     void printData() override;
 
-//     void loadNumbers(const std::vector<double>& data);  // might not be from file
-//     std::vector<double> applyThreshold(double threshold) const;
+//     void applyThreshold() const;
+//     double computeAverage() const;
+//     double findMin() const;
+//     double findMax() const;
 // };
 
 /*
