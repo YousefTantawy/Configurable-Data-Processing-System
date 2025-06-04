@@ -3,7 +3,6 @@
 
 #include "/mnt/d/Applications/Visual Studio Code/myCodes/c++ codes/projects/Configurable-Data-Processing-System/include/Processor.hpp"
 #include <memory>
-#include <string>
 
 
 class ProcessorFactory 

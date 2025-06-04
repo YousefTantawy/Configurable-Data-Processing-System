@@ -1,5 +1,4 @@
 #include "/mnt/d/Applications/Visual Studio Code/myCodes/c++ codes/projects/Configurable-Data-Processing-System/include/Configuration.hpp"
-
 Configuration::Configuration(const std::string& filePath)
 {
     std::string line;
@@ -14,10 +13,12 @@ Configuration::Configuration(const std::string& filePath)
         std::size_t seperator = line.find('=');
         // size_t is nothing but unsigned long but its advantage is that it avoids compiler warnings for unsigned mismatches
 
-        std::string key = line.substr(0, seperator);
-        std::string value = line.substr(seperator + 1);
-
-        configMap[key] = value;
+        if(seperator != std::string::npos)
+        {
+            std::string key = line.substr(0, seperator);
+            std::string value = line.substr(seperator + 1);
+            configMap[key] = value;
+        }
     }
 }
 
