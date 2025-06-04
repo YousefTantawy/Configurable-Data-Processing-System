@@ -1,26 +1,26 @@
 #include <iostream>
 #include <vector>
 #include <map>
-#include "/mnt/d/Applications/Visual Studio Code/myCodes/c++ codes/projects/Configurable-Data-Processing-System/include/ProcessorFactory.hpp"
-#include "/mnt/d/Applications/Visual Studio Code/myCodes/c++ codes/projects/Configurable-Data-Processing-System/include/Processor.hpp"
-#include "/mnt/d/Applications/Visual Studio Code/myCodes/c++ codes/projects/Configurable-Data-Processing-System/include/Configuration.hpp"
-#include <opencv2/opencv.hpp>
-using namespace cv;
+#include "Processor.hpp"
+#include "ProcessorFactory.hpp"
+#include "Configuration.hpp"
 using namespace std;
 
 int main(void) 
 {
-    std::string temp, temp2;
-    int choice;
-    TextProcessor *text;
-    ImageProcessor *image;
+    // ------------------Variables------------------------------------------------------------
+    string tempStr, tempStr2; // Using for temporary operations that require strings
+    int choice; // For user choice on what function to run
+    TextProcessor *text; // Pointer for functions exclusive to text processor class
+    ImageProcessor *image; // Pointer for functions exclusive to image processorclass
 
     Configuration Config("config/settings.txt");
-    std::unique_ptr<Processor> processManager = ProcessorFactory::createProcessor(Config.get("Processor.Options.Type"));
+    // Create a base pointer that points towards a processor object according to settings.txt
+    unique_ptr<Processor> processManager = ProcessorFactory::createProcessor(Config.get("Processor.Options.Type"));
 
     cout << "Write file path: ";
-    getline(cin, temp);
-    processManager->loadFile(temp);
+    getline(cin, tempStr);
+    processManager->loadFile(tempStr);
     for(;;)
     {
         if(Config.get("Processor.Options.Type") == "text" || Config.get("Processor.Options.Type") == "Text")
@@ -35,19 +35,20 @@ int main(void)
                 case 2:
                     text = dynamic_cast<TextProcessor*>(processManager.get());
                     cout << "What word would you like to search for in your file:\n";
-                    cin >> temp;
-                    cout << "Frequency of the word " << temp << ": " << text->searchWord(temp) << endl;
+                    cin >> tempStr;
+                    cout << "Frequency of the word " << tempStr << ": " << text->searchWord(tempStr) << endl;
                     break;
                 case 3:
                     text = dynamic_cast<TextProcessor*>(processManager.get());
                     cout << "What word would you like to replace:\n";
-                    cin >> temp;
+                    cin >> tempStr;
                     cout << "What is the word instead of replacement:\n";
-                    cin >> temp2;
-                    text->findAndReplace(temp, temp2);
+                    cin >> tempStr2;
+                    text->findAndReplace(tempStr, tempStr2);
                     break;
                 default:
-                    cout << "Error: invalid choice"; 
+                    cout << "Error: invalid choice. Exitting...";
+                    return 0; 
             }
         }
         else if(Config.get("Processor.Options.Type") == "Image" || Config.get("Processor.Options.Type") == "image")
@@ -61,7 +62,7 @@ int main(void)
                     break;
                 case 2:
                     image = dynamic_cast<ImageProcessor*>(processManager.get());
-                    image->applyThreshold(std::stof(Config.get("Processor.Options.Threshold")));
+                    image->applyThreshold(stof(Config.get("Processor.Options.Threshold")));
                     cout << "Threshold applied" << endl;
                     break;
                 case 3:
@@ -69,10 +70,10 @@ int main(void)
                     image->saveEdits();
                     break;
                 default:
-                    cout << "Error: invalid choice"; 
+                    cout << "Error: invalid choice. Exitting...";
+                    return 0;  
             }
-        }
-        
+        }     
     }
 }
 

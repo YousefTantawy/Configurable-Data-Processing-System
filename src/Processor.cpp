@@ -1,4 +1,4 @@
-#include "/mnt/d/Applications/Visual Studio Code/myCodes/c++ codes/projects/Configurable-Data-Processing-System/include/Processor.hpp"
+#include "Processor.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -10,7 +10,7 @@ using namespace std;
 
 // -------------------- TextProcessor --------------------
 
-void TextProcessor::loadFile(const std::string& filepath) 
+void TextProcessor::loadFile(const string& filepath) 
 {
     // Remember the filepath so that later findAndReplace can re‐open with trunc:
     filePath = filepath;
@@ -19,16 +19,16 @@ void TextProcessor::loadFile(const std::string& filepath)
     file.open(filepath, ios::in | ios::out);
     if (!file.is_open()) 
     {
-        throw std::invalid_argument("Failed to open text");
+        throw invalid_argument("Failed to open text");
     }
 }
 int TextProcessor::countLines()
 {
     file.clear(); 
-    file.seekg(0, std::ios::beg);
-    std::string temp;
+    file.seekg(0, ios::beg);
+    string temp;
     int counter = 0;
-    while (std::getline(file, temp)) {
+    while (getline(file, temp)) {
         counter++;
     }
     return counter;
@@ -36,35 +36,35 @@ int TextProcessor::countLines()
 int TextProcessor::countWords()
 {
     file.clear(); 
-    file.seekg(0, std::ios::beg);
-    std::string line, word;
+    file.seekg(0, ios::beg);
+    string line, word;
     int counter = 0;
 
-    while (std::getline(file, line)) {
-        std::istringstream iss(line);
+    while (getline(file, line)) {
+        istringstream iss(line);
         while (iss >> word) {
             counter++;
         }
     }
     return counter;
 }
-int TextProcessor::searchWord(std::string& searchWord) 
+int TextProcessor::searchWord(string& searchWord) 
 {
     file.clear();
-    file.seekg(0, std::ios::beg);
+    file.seekg(0, ios::beg);
 
-    std::string line, word;
+    string line, word;
     int counter = 0;
 
     // Lowercase the search term
     for (char& c : searchWord) 
-        c = std::tolower(static_cast<unsigned char>(c));
+        c = tolower(static_cast<unsigned char>(c));
 
-    while (std::getline(file, line)) {
-        std::istringstream iss(line);
+    while (getline(file, line)) {
+        istringstream iss(line);
         while (iss >> word) {
             for (char& c : word) 
-                c = std::tolower(static_cast<unsigned char>(c));
+                c = tolower(static_cast<unsigned char>(c));
             if (word == searchWord)
                 counter++;
         }
@@ -75,26 +75,26 @@ int TextProcessor::searchWord(std::string& searchWord)
 void TextProcessor::printData() 
 {
     if (file.is_open()) {
-        std::cout << "Number of lines in provided file: " << countLines() << std::endl;
-        std::cout << "Number of words in provided file: " << countWords() << std::endl;
+        cout << "Number of lines in provided file: " << countLines() << endl;
+        cout << "Number of words in provided file: " << countWords() << endl;
     }
     else {
-        std::cout << "No file provided!\n";
+        cout << "No file provided!\n";
     }
 }
-void TextProcessor::findAndReplace(std::string& findStr, const std::string& replaceStr)
+void TextProcessor::findAndReplace(string& findStr, const string& replaceStr)
 {
     // 1) Read entire file into 'content':
     file.clear();
-    file.seekg(0, std::ios::beg);
+    file.seekg(0, ios::beg);
 
-    std::ostringstream buffer;
+    ostringstream buffer;
     buffer << file.rdbuf();
-    std::string content = buffer.str();
+    string content = buffer.str();
 
     // 2) Do a simple find/replace (case‐sensitive, substring matches):
     size_t pos = 0;
-    while ((pos = content.find(findStr, pos)) != std::string::npos) {
+    while ((pos = content.find(findStr, pos)) != string::npos) {
         content.replace(pos, findStr.length(), replaceStr);
         pos += replaceStr.length();
     }
@@ -103,9 +103,9 @@ void TextProcessor::findAndReplace(std::string& findStr, const std::string& repl
     file.close();
 
     // Re‐open with trunc so that writing 'content' replaces everything:
-    file.open(filePath, std::ios::out | std::ios::trunc);
+    file.open(filePath, ios::out | ios::trunc);
     if (!file.is_open()) {
-        std::cerr << "Failed to reopen \"" << filePath << "\" for overwriting.\n";
+        cerr << "Failed to reopen \"" << filePath << "\" for overwriting.\n";
         return;
     }
 
@@ -114,20 +114,20 @@ void TextProcessor::findAndReplace(std::string& findStr, const std::string& repl
     file.close();
 
     // 4) (Optional) Re‐open in read/write mode again, in case main() wants to do more operations
-    file.open(filePath, std::ios::in | std::ios::out);
+    file.open(filePath, ios::in | ios::out);
     if (!file.is_open()) {
-        std::cerr << "Failed to re‐open \"" << filePath << "\" in read/write mode after replace.\n";
+        cerr << "Failed to re‐open \"" << filePath << "\" in read/write mode after replace.\n";
     }
 }
 // -------------------- ImageProcessor --------------------
-void ImageProcessor::loadFile(const std::string& filepath) 
+void ImageProcessor::loadFile(const string& filepath) 
 {
     if(filepath != filePath)
         filePath = filepath;
     image = imread(filepath);
     if (image.empty()) 
     {
-        throw std::invalid_argument("Failed to load image.");
+        throw invalid_argument("Failed to load image.");
     }
 }
 
@@ -140,36 +140,36 @@ void ImageProcessor::applyThreshold(float threshold)
 void ImageProcessor::printData()
 {
     if (image.empty()) {
-        std::cout << "No image loaded.\n";
+        cout << "No image loaded.\n";
         return;
     }
 
-    std::cout << "Image Information:\n";
-    std::cout << "------------------\n";
-    std::cout << "File Path: " << filePath << '\n';
-    std::cout << "Resolution (Width x Height): " << image.cols << " x " << image.rows << '\n';
-    std::cout << "Channels: " << image.channels() << '\n';
-    std::cout << "Depth (bit precision per channel): ";
+    cout << "Image Information:\n";
+    cout << "------------------\n";
+    cout << "File Path: " << filePath << '\n';
+    cout << "Resolution (Width x Height): " << image.cols << " x " << image.rows << '\n';
+    cout << "Channels: " << image.channels() << '\n';
+    cout << "Depth (bit precision per channel): ";
 
     switch (image.depth()) {
-        case CV_8U:  std::cout << "8-bit unsigned\n"; break;
-        case CV_8S:  std::cout << "8-bit signed\n"; break;
-        case CV_16U: std::cout << "16-bit unsigned\n"; break;
-        case CV_16S: std::cout << "16-bit signed\n"; break;
-        case CV_32S: std::cout << "32-bit signed\n"; break;
-        case CV_32F: std::cout << "32-bit float\n"; break;
-        case CV_64F: std::cout << "64-bit float\n"; break;
-        default:     std::cout << "Unknown\n"; break;
+        case CV_8U:  cout << "8-bit unsigned\n"; break;
+        case CV_8S:  cout << "8-bit signed\n"; break;
+        case CV_16U: cout << "16-bit unsigned\n"; break;
+        case CV_16S: cout << "16-bit signed\n"; break;
+        case CV_32S: cout << "32-bit signed\n"; break;
+        case CV_32F: cout << "32-bit float\n"; break;
+        case CV_64F: cout << "64-bit float\n"; break;
+        default:     cout << "Unknown\n"; break;
     }
 
-    std::cout << "Total Pixels: " << image.total() << '\n';
-    std::cout << "Image Size (rows x cols): " << image.size() << '\n';
+    cout << "Total Pixels: " << image.total() << '\n';
+    cout << "Image Size (rows x cols): " << image.size() << '\n';
 }
 
 
 void ImageProcessor::saveEdits()
 {
-    std::string savePath = "savedImage.jpg";
+    string savePath = "savedImage.jpg";
     imwrite(savePath, image);
 
     loadFile(filePath);

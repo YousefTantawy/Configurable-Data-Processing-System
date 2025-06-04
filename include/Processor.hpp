@@ -5,14 +5,15 @@
 #include <fstream>
 #include <vector>
 #include <opencv2/opencv.hpp>
+using namespace std;
 using namespace cv;
 
 class Processor {
 protected:
-    std::fstream file;  // shared by 2 processors
-    std::string filePath; // shared by all processors
+    fstream file;  // shared by 2 processors
+    string filePath; // shared by all processors
 public:
-    virtual void loadFile(const std::string& filepath) = 0; // new virtual interface
+    virtual void loadFile(const string& filepath) = 0; // new virtual interface
     virtual void printData() = 0; // pure virtual function
     virtual ~Processor() = default; // always add virtual destructor
 };
@@ -23,20 +24,20 @@ class TextProcessor : public Processor
 protected:
     
 public:
-    void loadFile(const std::string& filepath) override;
+    void loadFile(const string& filepath) override;
     void printData() override;
 
-    void findAndReplace(std::string& findStr, const std::string& replaceStr);
+    void findAndReplace(string& findStr, const string& replaceStr);
     int countLines();
     int countWords();
-    int searchWord(std::string& searchWord);
+    int searchWord(string& searchWord);
 };
 
 class ImageProcessor : public Processor {
 protected:
     Mat image;
 public:
-    void loadFile(const std::string& filepath) override;
+    void loadFile(const string& filepath) override;
     void printData() override;
 
     void applyThreshold(float threshold);
@@ -45,19 +46,19 @@ public:
 
 // class AudioProcessor : public Processor {
 // public:
-//     void loadFile(const std::string& filepath) override;
+//     void loadFile(const string& filepath) override;
 //     void printData() override;
 
-//     void loadAudioData(const std::string& filepath);  // same as above
+//     void loadAudioData(const string& filepath);  // same as above
 //     void filterNoise();
 // };
 
 // class NumericProcessor : public Processor {
 // protected:
-//     std::vector<double> numbers;
+//     vector<double> numbers;
 
 // public:
-//     void loadFile(const std::string& filepath) override;
+//     void loadFile(const string& filepath) override;
 //     void printData() override;
 
 //     void applyThreshold() const;

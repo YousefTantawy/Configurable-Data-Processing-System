@@ -1,2 +1,2 @@
-Processor.Options.Type=image
+Processor.Options.Type=Text
 Processor.Options.Threshold=0.8
