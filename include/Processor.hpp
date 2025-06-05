@@ -53,37 +53,19 @@ public:
 //     void filterNoise();
 // };
 
-// class NumericProcessor : public Processor {
-// protected:
-//     vector<double> numbers;
+class NumericProcessor : public Processor {
+protected:
+    vector<double> data;
 
-// public:
-//     void loadFile(const string& filepath) override;
-//     void printData() override;
+public:
+    void loadFile(const string& filepath) override;
+    void printData() override;
 
-//     void applyThreshold() const;
-//     double computeAverage() const;
-//     double findMin() const;
-//     double findMax() const;
-// };
-
-/*
-Here is a quick list of all functionalities in the Processors
-
-1. TextProcessor
-    - Read line by line 
-    - Search for words (ctrl-F)
-    - Count words
-    - 
-2. NumericProcessor
-    - Filter useless numbers through threshold
-    - 
-3. ImageProcessor
-    - Can load pixel data
-    - Apply filter or threshold
-4. AudioProcessor
-    - 
-    - 
-*/
+    void applyThreshold(double threshold);
+    double computeAverage() const;
+    double findMin() const;
+    double findMax() const;
+    int dataSampleCount() const;
+};
 
 #endif

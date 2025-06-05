@@ -12,7 +12,8 @@ int main(void)
     string tempStr, tempStr2; // Using for temporary operations that require strings
     int choice; // For user choice on what function to run
     TextProcessor *text; // Pointer for functions exclusive to text processor class
-    ImageProcessor *image; // Pointer for functions exclusive to image processorclass
+    ImageProcessor *image; // Pointer for functions exclusive to image processor class
+    NumericProcessor *Numeric; // Pointer for functions exclusive to Numeric processor class
 
     Configuration Config("config/settings.txt");
     // Create a base pointer that points towards a processor object according to settings.txt
@@ -74,6 +75,32 @@ int main(void)
                     return 0;  
             }
         }     
+        else if(Config.get("Processor.Options.Type") == "Numeric" || Config.get("Processor.Options.Type") == "Numeric")
+        {
+            cout << "What would you like to do:\n 1. print data | 2. Apply Threshold\n";
+            cin >> choice;
+            switch(choice)
+            {
+                case 1:
+                    processManager->printData();
+                    break;
+                case 2:
+                    Numeric = dynamic_cast<NumericProcessor*>(processManager.get());
+                    Numeric->applyThreshold(stof(Config.get("Processor.Options.Threshold")));
+                    cout << "Threshold applied" << endl;
+                    Numeric = nullptr;
+                    break;
+                case 3:
+                    break;
+                default:
+                    cout << "Error: invalid choice. Exitting...";
+                    return 0;  
+            }
+        }
+        else
+        {
+
+        }
     }
 }
 

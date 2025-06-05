@@ -4,6 +4,7 @@
 #include <sstream>
 #include <cctype>
 #include <map>
+#include <algorithm>
 #include <opencv2/opencv.hpp>
 using namespace cv;
 using namespace std;
@@ -21,6 +22,8 @@ void TextProcessor::loadFile(const string& filepath)
     {
         throw invalid_argument("Failed to open text");
     }
+
+    file.close();
 }
 int TextProcessor::countLines()
 {
@@ -99,9 +102,6 @@ void TextProcessor::findAndReplace(string& findStr, const string& replaceStr)
         pos += replaceStr.length();
     }
 
-    // 3) Now close the fstream and re‐open in trunc mode to overwrite:
-    file.close();
-
     // Re‐open with trunc so that writing 'content' replaces everything:
     file.open(filePath, ios::out | ios::trunc);
     if (!file.is_open()) {
@@ -120,6 +120,7 @@ void TextProcessor::findAndReplace(string& findStr, const string& replaceStr)
     }
 }
 // -------------------- ImageProcessor --------------------
+
 void ImageProcessor::loadFile(const string& filepath) 
 {
     if(filepath != filePath)
@@ -130,13 +131,6 @@ void ImageProcessor::loadFile(const string& filepath)
         throw invalid_argument("Failed to load image.");
     }
 }
-
-void ImageProcessor::applyThreshold(float threshold)
-{
-    cvtColor(image, image, COLOR_BGR2GRAY);
-    cv::threshold(image, image, int(threshold*255), 255, THRESH_BINARY);
-}
-
 void ImageProcessor::printData()
 {
     if (image.empty()) {
@@ -165,8 +159,11 @@ void ImageProcessor::printData()
     cout << "Total Pixels: " << image.total() << '\n';
     cout << "Image Size (rows x cols): " << image.size() << '\n';
 }
-
-
+void ImageProcessor::applyThreshold(float threshold)
+{
+    cvtColor(image, image, COLOR_BGR2GRAY);
+    cv::threshold(image, image, int(threshold*255), 255, THRESH_BINARY);
+}
 void ImageProcessor::saveEdits()
 {
     string savePath = "savedImage.jpg";
@@ -174,3 +171,89 @@ void ImageProcessor::saveEdits()
 
     loadFile(filePath);
 }
+
+// -------------------- NumericalProcessor --------------------
+
+void NumericProcessor::loadFile(const string& filepath) 
+{
+    // Remember the filepath so that later findAndReplace can re‐open with trunc:
+    filePath = filepath;
+
+    // Open in read/write mode:
+    file.open(filepath, ios::in | ios::out);
+    if (!file.is_open()) 
+    {
+        throw invalid_argument("Failed to open text");
+    }
+
+    std::string line;
+    while (std::getline(file, line)) 
+    {
+        std::istringstream iss(line);
+        double value;
+        while (iss >> value) 
+        {
+            data.push_back(value);
+        }
+    }
+
+    file.close();
+}
+void NumericProcessor::printData()
+{
+    cout << "Amount of data samples: " << dataSampleCount() << endl;
+    cout << "Largest data sample: " << findMax() << endl;
+    cout << "Smallest data sample: " << findMin() << endl;
+    cout << "Mean of data samples: " << computeAverage() << endl;
+}
+double NumericProcessor::computeAverage() const
+{
+    if (data.empty()) return 0.0;
+
+    double tempAvg = 0.0;
+    for(double n : data)
+    {   
+        tempAvg+=n;
+    }
+
+    return (tempAvg/data.size());
+}
+double NumericProcessor::findMin() const
+{
+    if (data.empty()) return 0.0;
+
+    return *min_element(data.begin(), data.end());
+}
+double NumericProcessor::findMax() const
+{
+    if (data.empty()) return 0.0;
+
+    return *max_element(data.begin(), data.end());
+}
+int NumericProcessor::dataSampleCount() const
+{
+    if (data.empty()) return 0;
+    return data.size();
+}
+void NumericProcessor::applyThreshold(double threshold)
+{
+    threshold*=findMax();
+    for (int counter = 0; counter < dataSampleCount(); counter++)
+    {
+        if (abs(data[counter]) > threshold)
+            data[counter] = 0.0;
+    }
+    file.open(filePath, std::ios::out | std::ios::trunc);
+    if (!file.is_open())
+        throw std::runtime_error("Failed to open file for writing.");
+
+    // Write updated data back to file, separated by spaces or newlines
+    for (const auto& val : data)
+    {
+        // if(val != 0)
+            file << val << " ";  // newline-separated values (or use spaces)
+    }
+
+    file.close();
+}
+

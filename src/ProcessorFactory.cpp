@@ -9,10 +9,10 @@ unique_ptr<Processor> ProcessorFactory::createProcessor(const string& type)
     {
         return make_unique<TextProcessor>();
     } 
-    // else if (type == "Numeric" || type == "numeric") 
-    // {
-    //     return make_unique<NumericProcessor>();
-    // } 
+    else if (type == "Numeric" || type == "numeric") 
+    {
+        return make_unique<NumericProcessor>();
+    } 
     else if (type == "Image" || type == "image") 
     {
         return make_unique<ImageProcessor>();

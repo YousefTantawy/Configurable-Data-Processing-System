@@ -1,2 +1,2 @@
-Processor.Options.Type=Text
-Processor.Options.Threshold=0.8
+Processor.Options.Type=Numeric
+Processor.Options.Threshold=0.2
