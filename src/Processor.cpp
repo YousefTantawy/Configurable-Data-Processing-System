@@ -253,7 +253,6 @@ void NumericProcessor::applyThreshold(double threshold)
         // if(val != 0)
             file << val << " ";  // newline-separated values (or use spaces)
     }
-
     file.close();
 }
 
